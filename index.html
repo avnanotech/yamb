@@ -1,0 +1,276 @@
+<! DOCTYPE html >
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ALEKSANDROV IT POLIGON - YAMB</title>
+<style>
+ body{background-image: radial-gradient(#555555, #444466, #333377,#222288,#111199);}
+ table{margin:auto;}
+ div{background-color:#000000;text-align:center;width:30%;margin:auto;}
+ .semafor{width:20%;color:red;margin:auto;font-size:40pt;}
+ img{width:50px;height:50px;}
+ td{width:150px;height:30px;color:#ffffff;text-align:center}
+ .dsc{background-color:#777799;color:#ffffff;font-size:14pt;} 
+ .txt{background-color:#ffffff;color:#770000;}
+ .suma{background-color:#aaaaaa;color:#ffffff;}
+</style>
+<script>
+ var vrednostibacanja=[1,2,3,4,5]
+ var baceno=false
+ 
+ // pocetni parametri
+ 
+ function start(){
+  for(let osaY=1;osaY<15;osaY++){ 
+   for(let osaX=1;osaX<4;osaX++){
+    if(osaY!=7 && osaY!=10){
+      document.getElementsByTagName("td")[osaY*4+osaX].addEventListener("click",function() {
+        zapis(osaX,osaY);
+      });
+    } 
+   }
+  }
+  kockice();
+ }
+ 
+ function zapis(oX,oY){
+   if(proverazapisa(oX,oY)) {
+    baceno=false
+    if(oY>=1 && oY<=6){
+     od1do6(oX,oY) 
+    }
+    else if(oY>=8 && oY<=9){
+     maxmin(oX,oY) 
+    }
+    else if(oY==11){
+     kenta(oX,oY) 
+    }
+    else if(oY>=12 && oY<=14){
+     plus3(oX,oY) 
+    }
+   }
+ }
+ 
+ function proverazapisa(oX,oY){
+  if(baceno){ 
+    if(document.getElementsByTagName("td")[oY*4+oX].innerHTML==""){
+       if(oX==1){
+          preoY=oY-1
+          if(preoY!=0 && preoY!=7 && preoY!=10){
+            return proveraredosleda(oX,preoY)
+          }
+          else{
+              preoY--
+              if(preoY==6 | preoY==9){
+                return proveraredosleda(oX,preoY)   
+              } 
+              else{            
+              return true}
+          }
+        }
+        else if(oX==3){
+          preoY=oY+1
+          if(preoY!=7 && preoY!=10 && preoY!=15){
+            return proveraredosleda(oX,preoY)
+          }
+          else{
+              preoY++
+              if(preoY==8 | preoY==11){
+                return proveraredosleda(oX,preoY)   
+              } 
+              else{            
+              return true}
+          }
+        }
+        else{
+          return true
+        }
+    }
+    else{
+      alert("Polje je popunjeno")
+      return false
+    }
+  }
+ }
+
+ function proveraredosleda(oX,preoY){
+  if(document.getElementsByTagName("td")[preoY*4+oX].innerHTML==""){
+    alert("Polja moraju redom biti popunjena");
+    return false
+  } 
+  else{
+    return true
+  }
+ }
+
+
+
+ function kockice(){
+  for(let rbk=0;rbk<5;rbk++){
+   document.getElementsByTagName("img")[rbk].src="broj"+vrednostibacanja[rbk]+".png"
+  }
+ }
+
+ function bacanje(){
+  let vreme=new Date();
+  for(let rbk=0;rbk<5;rbk++){
+   vrednostibacanja[rbk]=(Math.floor(Math.random() * vreme.getMilliseconds()) % 6)+1; 
+  } 
+  sortiranje();
+  kockice();
+  baceno=true;
+ }
+ 
+ function sortiranje(){
+  for(let rbk1=0;rbk1<5;rbk1++){
+    for(let rbk2=rbk1+1;rbk2<6;rbk2++){
+     if(vrednostibacanja[rbk1]>vrednostibacanja[rbk2]){
+       tmp=vrednostibacanja[rbk1] 
+       vrednostibacanja[rbk1]=vrednostibacanja[rbk2]
+       vrednostibacanja[rbk2]=tmp
+     }  
+    } 
+  } 
+ }
+
+
+ function od1do6(oX,oY){
+  let sum1do6=0
+  for(let rbk=0;rbk<5;rbk++){
+   if(vrednostibacanja[rbk]==oY){
+    sum1do6+=vrednostibacanja[rbk]
+   }
+  }
+  document.getElementsByTagName("td")[oY*4+oX].innerHTML=sum1do6;
+  zbir()
+ }
+
+
+ function kenta(oX,oY){
+  let sumkenta=0
+  knt=true
+  for(let rbk=0;rbk<5;rbk++){
+   if(vrednostibacanja[rbk]==(rbk+1)){
+    sumkenta+=vrednostibacanja[rbk]
+   }
+   else{
+    knt=false
+    sumkenta=0
+    break; 
+   }
+  }
+  if(!knt){
+     for(let rbk=0;rbk<5;rbk++){
+      if(vrednostibacanja[rbk]==(rbk+2)){
+        sumkenta+=vrednostibacanja[rbk]
+      }
+      else{
+        sumkenta=0
+        break; 
+      }
+     } 
+  }
+  document.getElementsByTagName("td")[oY*4+oX].innerHTML=sumkenta;
+  zbir()
+ }
+
+ function plus3(oX,oY){
+  sumplus3=0
+  if(oY==14){
+    if(vrednostibacanja[0]==vrednostibacanja[4]){
+      sumplus3=sumk()
+    } 
+  }
+  else if(oY==13){
+    if(vrednostibacanja[1]==vrednostibacanja[3]){
+      if(vrednostibacanja[0]==vrednostibacanja[2] | vrednostibacanja[2]==vrednostibacanja[4]){
+        sumplus3=sumk()
+      } 
+    }
+  }
+  else{
+    if(vrednostibacanja[0]==vrednostibacanja[1] && vrednostibacanja[3]==vrednostibacanja[4]){
+      if(vrednostibacanja[0]==vrednostibacanja[2] | vrednostibacanja[2]==vrednostibacanja[4]){
+        sumplus3=sumk()
+      }
+    }     
+  }
+  document.getElementsByTagName("td")[oY*4+oX].innerHTML=sumplus3;
+  zbir()
+ }
+
+ function sumk(){
+  summk=0
+  for(let rbk=0;rbk<5;rbk++){
+    summk+=vrednostibacanja[rbk]
+  } 
+  return summk;
+ }
+
+ function maxmin(oX,oY){
+  let summaxmin=0
+  for(let rbk=0;rbk<5;rbk++){
+    summaxmin+=vrednostibacanja[rbk]
+  }
+  document.getElementsByTagName("td")[oY*4+oX].innerHTML=summaxmin;
+  zbir()
+ }
+ 
+ function zbir(){
+  let totsum=0
+  for(let kol=1;kol<4;kol++){
+    let sumsum=0
+    for(let g1=1;g1<7;g1++){
+     let celija=document.getElementsByTagName("td")[g1*4+kol].innerHTML 
+     if(celija!=""){
+       sumsum+=parseInt(celija);
+     }
+    }
+    document.getElementsByTagName("td")[28+kol].innerHTML=sumsum
+    totsum+=sumsum
+    let celmax=document.getElementsByTagName("td")[32+kol].innerHTML 
+    let celmin=document.getElementsByTagName("td")[36+kol].innerHTML 
+    if(celmax!="" && celmin!=""){
+      document.getElementsByTagName("td")[40+kol].innerHTML=(parseInt(celmax)-parseInt(celmin))*2
+      totsum+=(parseInt(celmax)-parseInt(celmin))*2
+    }        
+
+    sumsum=0
+    for(g1=11;g1<15;g1++){
+     celija=document.getElementsByTagName("td")[g1*4+kol].innerHTML 
+     if(celija!=""){
+       sumsum+=parseInt(celija);
+     }
+    }
+    document.getElementsByTagName("td")[60+kol].innerHTML=sumsum
+    totsum+=sumsum
+  }
+  document.getElementsByTagName("div")[0].innerHTML=totsum
+ }
+</script>
+</head>
+<body onload="start()">
+<div class=semafor>0</div>  
+<table>
+<tr><td  class="dsc"></td><td  class="dsc">\/</td><td  class="dsc">=</td><td  class="dsc">/\</td></tr>
+<tr><td  class="dsc">1</td><td  class="txt"></td><td  class="txt"></td><td  class="txt"></td></tr>
+<tr><td  class="dsc">2</td><td  class="txt"></td><td  class="txt"></td><td  class="txt"></td></tr>
+<tr><td  class="dsc">3</td><td  class="txt"></td><td  class="txt"></td><td  class="txt"></td></tr>
+<tr><td  class="dsc">4</td><td  class="txt"></td><td  class="txt"></td><td  class="txt"></td></tr>
+<tr><td  class="dsc">5</td><td  class="txt"></td><td  class="txt"></td><td  class="txt"></td></tr>
+<tr><td  class="dsc">6</td><td  class="txt"></td><td  class="txt"></td><td  class="txt"></td></tr>
+<tr><td  class="dsc">Σ</td><td  class="suma"></td><td  class="suma"></td><td  class="suma"></td></td></tr>
+<tr><td  class="dsc">MAX</td><td  class="txt"></td><td  class="txt"></td><td  class="txt"></td></tr>
+<tr><td  class="dsc">MIN</td><td  class="txt"></td><td  class="txt"></td><td  class="txt"></td></tr>
+<tr><td  class="dsc">Σ</td><td  class="suma"></td><td  class="suma"></td><td  class="suma"></td></td></tr>
+<tr><td  class="dsc">KENTA</td><td  class="txt"></td><td  class="txt"></td><td  class="txt"></td></tr>
+<tr><td  class="dsc">FUL</td><td  class="txt"></td><td  class="txt"></td><td  class="txt"></td></tr>
+<tr><td  class="dsc">KVARTET</td><td  class="txt"></td><td  class="txt"></td><td  class="txt"></td></tr>
+<tr><td  class="dsc">JAMB</td><td  class="txt"></td><td  class="txt"></td><td  class="txt"></td></tr>
+<tr><td  class="dsc">Σ</td><td  class="suma"></td><td  class="suma"></td><td  class="suma"></td></td></tr>
+</table>
+<div><img> <img> <img> <img> <img> <br><input type="button" value="BACAJ" onclick="bacanje()"></div>
+
+ 
+</body>
+</html>
